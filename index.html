@@ -82,9 +82,9 @@
       0x1E90FF  // DodgerBlue
     ];
     let colorIndex = 0;
-    let nextColorIndex = 1;
-    let transitionStartTime = null;
-    let lastTransitionTime = 0;
+    let nextColorChange = Date.now() + 6000; // 6 seconds from now
+    let transitionProgress = 0;
+    const transitionDuration = 1000; // 1-second transition
 
     const bubbleMaterial = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(colors[colorIndex]),
@@ -115,7 +115,7 @@
           bevelEnabled: true,
           bevelThickness: 1.5,
           bevelSize: 1.5,
-          bevelSegments: 4 // Reduced from 8 to simplify geometry
+          bevelSegments: 4 // Reduced to minimize artifacts
         });
         geometry.center();
 
@@ -147,35 +147,26 @@
     const particles = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(particles);
 
-    // **Smooth Color Transition Function**
-    function updateColor() {
-      const currentTime = performance.now();
-      if (!transitionStartTime) {
-        transitionStartTime = currentTime;
-      }
-      const elapsed = currentTime - transitionStartTime;
-      const transitionDuration = 1000; // 1-second transition
-
-      if (elapsed >= transitionDuration) {
-        colorIndex = nextColorIndex;
-        nextColorIndex = (nextColorIndex + 1) % colors.length;
-        transitionStartTime = currentTime;
-      }
-
-      const progress = Math.min(elapsed / transitionDuration, 1);
-      const currentColor = new THREE.Color(colors[colorIndex]);
-      const nextColor = new THREE.Color(colors[nextColorIndex]);
-      bubbleMaterial.color.copy(currentColor).lerp(nextColor, progress);
-    }
-
-    // **Animate with Color Transition and Wobble**
+    // **Animate with Simple Color Transition**
     let time = 0;
     function animate() {
       requestAnimationFrame(animate);
       time += 0.01;
 
-      // Update color before rendering
-      updateColor();
+      const now = Date.now();
+      if (now >= nextColorChange) {
+        colorIndex = (colorIndex + 1) % colors.length;
+        nextColorChange = now + 6000; // 6 seconds interval
+        transitionProgress = 0; // Reset transition
+      }
+
+      if (transitionProgress < 1) {
+        transitionProgress += 0.01; // Gradual transition over ~100 frames
+        if (transitionProgress > 1) transitionProgress = 1;
+        const currentColor = new THREE.Color(colors[(colorIndex - 1 + colors.length) % colors.length]);
+        const nextColor = new THREE.Color(colors[colorIndex]);
+        bubbleMaterial.color.lerpColors(currentColor, nextColor, transitionProgress);
+      }
 
       if (textMesh && isRotating) {
         const group = textMesh.userData.group;
@@ -190,21 +181,15 @@
     }
     animate();
 
-    // **Auto-Change Color Every 4 Seconds**
-    setInterval(() => {
-      if (textMesh && performance.now() - lastTransitionTime >= 4000) {
-        transitionStartTime = null; // Reset transition
-        lastTransitionTime = performance.now();
-      }
-    }, 100); // Check every 100ms to align with frame rate
-
     // Controls
     function toggleRotation() {
       isRotating = !isRotating;
     }
     function changeColor() {
       if (textMesh) {
-        transitionStartTime = null; // Trigger immediate transition
+        colorIndex = (colorIndex + 1) % colors.length;
+        nextColorChange = Date.now(); // Immediate next change
+        transitionProgress = 0; // Reset transition
       }
     }
 
