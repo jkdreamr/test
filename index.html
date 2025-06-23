@@ -68,18 +68,18 @@
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
 
-    // **Bubble Material with 80 Units Darker Creative Colors**
+    // **Bubble Material with 20 Units Lighter Creative Colors**
     const colors = [
-      0x00B319, // 80 units darker Cyan (from 0x60CC99)
-      0xA033A0, // 80 units darker Magenta (from 0xD04CC0)
-      0x96DA1A, // 80 units darker OrangeRed (from 0xD65A3A)
-      0x002A79, // 80 units darker DarkTurquoise (from 0x60A499)
-      0x9E4E00, // 80 units darker Gold (from 0xD6A840)
-      0x571C5C, // 80 units darker DarkViolet (from 0x974C9C)
-      0x20563A, // 80 units darker LightSeaGreen (from 0x60867A)
-      0x9E2C4C, // 80 units darker HotPink (from 0xD6668C)
-      0x373E37, // 80 units darker LimeGreen (from 0x77B677)
-      0x3F5A8C  // 80 units darker DodgerBlue (from 0x7790CC)
+      0x20B339, // 20 units lighter Cyan (from 0x00B319)
+      0xB053C0, // 20 units lighter Magenta (from 0xA033A0)
+      0xB6FA3A, // 20 units lighter OrangeRed (from 0x96DA1A)
+      0x204A99, // 20 units lighter DarkTurquoise (from 0x002A79)
+      0xBE6E20, // 20 units lighter Gold (from 0x9E4E00)
+      0x773C7C, // 20 units lighter DarkViolet (from 0x571C5C)
+      0x40765A, // 20 units lighter LightSeaGreen (from 0x20563A)
+      0xBE4C6C, // 20 units lighter HotPink (from 0x9E2C4C)
+      0x575E57, // 20 units lighter LimeGreen (from 0x373E37)
+      0x5F7AAC  // 20 units lighter DodgerBlue (from 0x3F5A8C)
     ];
     let colorIndex = 0;
     let nextColorChange = Date.now() + 4000; // 4 seconds from now
