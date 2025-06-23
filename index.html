@@ -53,7 +53,7 @@
     renderer.setClearAlpha(0); // Transparent background
     document.getElementById('container').appendChild(renderer.domElement);
 
-    // **Lighting Adjustments for Dark Glass Visibility**
+    // **Lighting Adjustments for Better Glass Visibility**
     scene.add(new THREE.AmbientLight(0xffffff, 1.2)); // Even illumination
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(30, 50, 30);
@@ -63,7 +63,7 @@
     pointLight1.position.set(20, 30, 20);
     scene.add(pointLight1);
 
-    const spotLight = new THREE.SpotLight(0xffffff, 3.5); // Increased for edge highlights
+    const spotLight = new THREE.SpotLight(0xffffff, 4.0); // Increased for edge highlights and contrast
     spotLight.position.set(0, 20, 30);
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
@@ -72,18 +72,18 @@
     backLight.position.set(0, 2, -20); // Behind the text
     scene.add(backLight);
 
-    // **Bubble Material with Pastel Colors**
+    // **Bubble Material with Darker Pastel Colors**
     const colors = [
-      0xADD8E6, // Baby Blue
-      0xFFB6C1, // Baby Pink
-      0xFFA07A, // Baby Orange
-      0xB0E0E6, // Light Baby Blue
-      0xFFDAB9, // Peach (soft orange)
-      0xE6E6FA, // Lavender (soft purple)
-      0x98FB98, // Pale Green
-      0xF0E68C, // Khaki (soft yellow)
-      0xD8BFD8, // Thistle (soft purple)
-      0xB0C4DE  // Light Steel Blue
+      0x87B9D1, // Darker Baby Blue (from 0xADD8E6 - ~50 units)
+      0xE099B4, // Darker Baby Pink (from 0xFFB6C1 - ~50 units)
+      0xD9835D, // Darker Baby Orange (from 0xFFA07A - ~50 units)
+      0x8AC7D1, // Darker Light Baby Blue (from 0xB0E0E6 - ~50 units)
+      0xFDBD9C, // Darker Peach (from 0xFFDAB9 - ~50 units)
+      0xCCC9E5, // Darker Lavender (from 0xE6E6FA - ~50 units)
+      0x7AD87B, // Darker Pale Green (from 0x98FB98 - ~50 units)
+      0xD4C969, // Darker Khaki (from 0xF0E68C - ~50 units)
+      0xBCA2BC, // Darker Thistle (from 0xD8BFD8 - ~50 units)
+      0x94A7C9  // Darker Light Steel Blue (from 0xB0C4DE - ~50 units)
     ];
     let colorIndex = 0;
     let nextColorChange = Date.now() + 4000; // 4 seconds from now
@@ -102,7 +102,7 @@
       clearcoatRoughness: 0.05,
       refractionRatio: 0.9,
       transparent: true,
-      opacity: 0.95 // Increased for clear visibility
+      opacity: 0.98 // Slightly increased for better readability
     });
 
     // Create text
