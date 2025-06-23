@@ -48,9 +48,9 @@
     let camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 1000);
     camera.position.set(0,0,60);
 
-    let renderer = new THREE.WebGLRenderer({ antialias:true, alpha: true });
+    let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(innerWidth, innerHeight);
-    renderer.setClearAlpha(0); // Changed to 0 for transparent background
+    renderer.setClearAlpha(0); // Transparent background
     document.getElementById('container').appendChild(renderer.domElement);
 
     // Lighting
@@ -63,7 +63,7 @@
     pointLight1.position.set(20, 30, 20);
     scene.add(pointLight1);
 
-    // Bubble material
+    // Bubble material (without normal map)
     const colors = [0x88ccff, 0xff88cc, 0x88ff88, 0xffffaa];
     let colorIndex = 0;
 
@@ -80,17 +80,6 @@
       transparent: true,
       opacity: 1.0
     });
-
-    // Generate noise normal map
-    const size = 256, data = new Uint8Array(3 * size * size);
-    for (let i = 0; i < size * size; i++) {
-      const v = 128 + Math.floor(64 * (Math.random() * 2 - 1));
-      data[3 * i] = data[3 * i + 1] = data[3 * i + 2] = v;
-    }
-    const normalMap = new THREE.DataTexture(data, size, size, THREE.RGBFormat);
-    normalMap.needsUpdate = true;
-    bubbleMaterial.normalMap = normalMap;
-    bubbleMaterial.normalScale.set(0.15, 0.15);
 
     // Create text
     let textMesh, isRotating = true;
@@ -113,7 +102,7 @@
         textMesh = new THREE.Mesh(geometry, bubbleMaterial);
 
         let group = new THREE.Group();
-        group.add(textMesh); // Only add the main text mesh, no outline
+        group.add(textMesh);
         scene.add(group);
 
         group.position.y = 2;
@@ -143,12 +132,6 @@
     function animate() {
       requestAnimationFrame(animate);
       time += 0.01;
-
-      // Animate distortion
-      if (bubbleMaterial.normalMap) {
-        bubbleMaterial.normalMap.offset.x = time * 0.03;
-        bubbleMaterial.normalMap.offset.y = time * 0.02;
-      }
 
       // Animate rotation and wobble
       if (textMesh && isRotating) {
