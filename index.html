@@ -68,18 +68,18 @@
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
 
-    // **Bubble Material Adjustments with 10 Colors**
+    // **Bubble Material with Creative Colors**
     const colors = [
-      0x3366cc, // Dark Blue
-      0xcc3366, // Dark Red
-      0x33cc33, // Dark Green
-      0xcccc33, // Dark Yellow
-      0x663399, // Dark Purple
-      0xff6600, // Dark Orange
-      0x0066cc, // Medium Blue
-      0xcc0066, // Medium Red
-      0x33cc99, // Teal
-      0x999933  // Olive
+      0x00FFCC, // Cyan
+      0xFF00FF, // Magenta
+      0xFF4500, // OrangeRed
+      0x00CED1, // DarkTurquoise
+      0xFFD700, // Gold
+      0x9400D3, // DarkViolet
+      0x20B2AA, // LightSeaGreen
+      0xFF69B4, // HotPink
+      0x32CD32, // LimeGreen
+      0x1E90FF  // DodgerBlue
     ];
     let colorIndex = 0;
     let nextColorIndex = 1;
@@ -152,7 +152,7 @@
         transitionStartTime = performance.now();
       }
       const currentTime = performance.now();
-      const progress = Math.min((currentTime - transitionStartTime) / 500, 1); // 500ms transition
+      const progress = Math.min((currentTime - transitionStartTime) / 1000, 1); // 1-second transition
 
       if (progress >= 1) {
         colorIndex = nextColorIndex;
@@ -185,12 +185,12 @@
     }
     animate();
 
-    // **Auto-Change Color Every 1.5 Seconds**
+    // **Auto-Change Color Every 2.5 Seconds**
     setInterval(() => {
       if (textMesh) {
         transitionStartTime = null; // Reset transition
       }
-    }, 1500); // 1.5 seconds
+    }, 2500); // 2.5 seconds
 
     // Controls
     function toggleRotation() {
