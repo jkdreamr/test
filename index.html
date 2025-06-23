@@ -50,7 +50,7 @@
 
     let renderer = new THREE.WebGLRenderer({ antialias:true, alpha: true });
     renderer.setSize(innerWidth, innerHeight);
-    renderer.setClearAlpha(1);  // Changed from 0 to 1 for proper background blending
+    renderer.setClearAlpha(0); // Changed to 0 for transparent background
     document.getElementById('container').appendChild(renderer.domElement);
 
     // Lighting
@@ -81,16 +81,6 @@
       opacity: 1.0
     });
 
-    // Updated outline material with depthWrite:false and back side rendering to fix glitches
-    const outlineMaterial = new THREE.MeshToonMaterial({
-      color: 0xffffff,
-      opacity: 0.2,
-      transparent: true,
-      depthWrite: false,
-      depthTest: true,
-      side: THREE.BackSide
-    });
-
     // Generate noise normal map
     const size = 256, data = new Uint8Array(3 * size * size);
     for (let i = 0; i < size * size; i++) {
@@ -103,7 +93,7 @@
     bubbleMaterial.normalScale.set(0.15, 0.15);
 
     // Create text
-    let textMesh, outlineMesh, halos = [], isRotating = true;
+    let textMesh, isRotating = true;
 
     new THREE.FontLoader().load(
       'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
@@ -121,30 +111,10 @@
         geometry.center();
 
         textMesh = new THREE.Mesh(geometry, bubbleMaterial);
-        outlineMesh = new THREE.Mesh(geometry, outlineMaterial);
-        outlineMesh.scale.multiplyScalar(1.05);
 
         let group = new THREE.Group();
-        group.add(textMesh);
-        group.add(outlineMesh);
+        group.add(textMesh); // Only add the main text mesh, no outline
         scene.add(group);
-
-        // Halo sprite
-        const spriteMat = new THREE.SpriteMaterial({
-          color: 0xffffff,
-          transparent: true,
-          opacity: 0.15,
-          blending: THREE.AdditiveBlending
-        });
-        const bb = new THREE.Box3().setFromObject(group);
-        const size = bb.getSize(new THREE.Vector3());
-        const center = bb.getCenter(new THREE.Vector3());
-
-        const halo = new THREE.Sprite(spriteMat);
-        halo.scale.set(size.x * 1.5, size.y * 1.5, 1);
-        halo.position.copy(center);
-        scene.add(halo);
-        halos.push(halo);
 
         group.position.y = 2;
         textMesh.userData.group = group;
