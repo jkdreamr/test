@@ -72,18 +72,18 @@
     backLight.position.set(0, 2, -20); // Behind the text
     scene.add(backLight);
 
-    // **Bubble Material with Much Darker Visible Colors**
+    // **Bubble Material with Lighter Dark Colors**
     const colors = [
-      0x004C00, // Much darker Cyan (from 0x66FF88 - ~100 units)
-      0x4D004D, // Much darker Magenta (from 0xD66BEA - ~100 units)
-      0x994C00, // Much darker OrangeRed (from 0xFFEA66 - ~100 units)
-      0x004C66, // Much darker DarkTurquoise (from 0x66BEE6 - ~100 units)
-      0x994C00, // Much darker Gold (from 0xFFC266 - ~100 units)
-      0x4D004D, // Much darker DarkViolet (from 0xA66BEA - ~100 units)
-      0x004C33, // Much darker LightSeaGreen (from 0x66E6CC - ~100 units)
-      0x990033, // Much darker HotPink (from 0xEA66B3 - ~100 units)
-      0x336600, // Much darker LimeGreen (from 0x88FF88 - ~100 units)
-      0x003366  // Much darker DodgerBlue (from 0x66A3EA - ~100 units)
+      0x507E50, // 50 units lighter Cyan (from 0x004C00)
+      0x9D4E9D, // 50 units lighter Magenta (from 0x4D004D)
+      0xE99E50, // 50 units lighter OrangeRed (from 0x994C00)
+      0x50BEBE, // 50 units lighter DarkTurquoise (from 0x004C66)
+      0xE99E50, // 50 units lighter Gold (from 0x994C00)
+      0x9D4E9D, // 50 units lighter DarkViolet (from 0x4D004D)
+      0x509E83, // 50 units lighter LightSeaGreen (from 0x004C33)
+      0xE94E83, // 50 units lighter HotPink (from 0x990033)
+      0x83B350, // 50 units lighter LimeGreen (from 0x336600)
+      0x50A3BE  // 50 units lighter DodgerBlue (from 0x003366)
     ];
     let colorIndex = 0;
     let nextColorChange = Date.now() + 4000; // 4 seconds from now
