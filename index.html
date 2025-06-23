@@ -8,7 +8,7 @@
     body {
       margin: 0;
       overflow: hidden;
-      background: linear-gradient(135deg, #FF9999, #FF99CC, #99CC99); /* Darker gradient for contrast */
+      background: linear-gradient(135deg, #FFB3B3, #FFB3D9, #B3D9B3); /* Lighter gradient for contrast */
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
     }
@@ -68,21 +68,21 @@
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
 
-    // **Bubble Material with Creative Colors**
+    // **Bubble Material with Lighter Creative Colors**
     const colors = [
-      0x00FFCC, // Cyan
-      0xFF00FF, // Magenta
-      0xFF4500, // OrangeRed
-      0x00CED1, // DarkTurquoise
-      0xFFD700, // Gold
-      0x9400D3, // DarkViolet
-      0x20B2AA, // LightSeaGreen
-      0xFF69B4, // HotPink
-      0x32CD32, // LimeGreen
-      0x1E90FF  // DodgerBlue
+      0x80FFCC, // Lighter Cyan
+      0xFF80FF, // Lighter Magenta
+      0xFF8C69, // Lighter OrangeRed
+      0x80CED1, // Lighter DarkTurquoise
+      0xFFE680, // Lighter Gold
+      0xBF80D3, // Lighter DarkViolet
+      0x80B2AA, // Lighter LightSeaGreen
+      0xFF99C2, // Lighter HotPink
+      0x99E699, // Lighter LimeGreen
+      0x99C2FF  // Lighter DodgerBlue
     ];
     let colorIndex = 0;
-    let nextColorChange = Date.now() + 6000; // 6 seconds from now
+    let nextColorChange = Date.now() + 4000; // 4 seconds from now
     let transitionProgress = 0;
     const transitionDuration = 1000; // 1-second transition
 
@@ -156,12 +156,12 @@
       const now = Date.now();
       if (now >= nextColorChange) {
         colorIndex = (colorIndex + 1) % colors.length;
-        nextColorChange = now + 6000; // 6 seconds interval
+        nextColorChange = now + 4000; // 4 seconds interval
         transitionProgress = 0; // Reset transition
       }
 
       if (transitionProgress < 1) {
-        transitionProgress += 0.01; // Gradual transition over ~100 frames
+        transitionProgress += 0.01; // 1-second transition over ~100 frames
         if (transitionProgress > 1) transitionProgress = 1;
         const currentColor = new THREE.Color(colors[(colorIndex - 1 + colors.length) % colors.length]);
         const nextColor = new THREE.Color(colors[colorIndex]);
