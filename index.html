@@ -8,7 +8,7 @@
     body {
       margin: 0;
       overflow: hidden;
-      background: linear-gradient(135deg, #FFDAB3, #FFCCE5, #D0F0C0);
+      background: linear-gradient(135deg, #FF9999, #FF99CC, #99CC99); /* Darker gradient for contrast */
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
     }
@@ -54,37 +54,37 @@
     document.getElementById('container').appendChild(renderer.domElement);
 
     // **Lighting Adjustments for Better Visibility**
-    scene.add(new THREE.AmbientLight(0xffffff, 1.5)); // Increased from 1.2
+    scene.add(new THREE.AmbientLight(0xffffff, 1.0)); // Reduced from 1.5 for contrast
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(30, 50, 30);
     scene.add(dirLight);
 
-    const pointLight1 = new THREE.PointLight(0xffaacc, 1.5, 100); // Increased from 1
+    const pointLight1 = new THREE.PointLight(0xffaacc, 1.5, 100);
     pointLight1.position.set(20, 30, 20);
     scene.add(pointLight1);
 
-    const spotLight = new THREE.SpotLight(0xffffff, 1);
+    const spotLight = new THREE.SpotLight(0xffffff, 1.5); // Increased from 1
     spotLight.position.set(0, 20, 30);
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
 
     // **Bubble Material Adjustments**
-    const colors = [0x88ccff, 0xff88cc, 0x88ff88, 0xffffaa];
+    const colors = [0x3366cc, 0xcc3366, 0x33cc33, 0xcccc33]; // Darker colors for visibility
     let colorIndex = 0;
 
     const bubbleMaterial = new THREE.MeshPhysicalMaterial({
       color: colors[colorIndex],
       roughness: 0.1,
       metalness: 0.2,
-      transmission: 0.9, // Slightly less transparent for visibility
-      thickness: 1.5, // Adjusted for better glass effect
-      ior: 1.5, // More glass-like refraction
-      reflectivity: 0.5,
+      transmission: 0.6, // Reduced from 0.9 for less transparency
+      thickness: 1.5,
+      ior: 1.5,
+      reflectivity: 0.7, // Increased from 0.5 for more visibility
       clearcoat: 1,
       clearcoatRoughness: 0.1,
-      refractionRatio: 0.9, // Added for slight refraction effect
+      refractionRatio: 0.9,
       transparent: true,
-      opacity: 1.0
+      opacity: 0.9 // Slightly reduced from 1.0 for density
     });
 
     // Create text
@@ -127,7 +127,7 @@
     const particleMaterial = new THREE.PointsMaterial({
       color: 0xffffff,
       size: 0.4,
-      opacity: 0.1, // Reduced from 0.2 to avoid overpowering text
+      opacity: 0.1,
       transparent: true
     });
     const particles = new THREE.Points(particleGeometry, particleMaterial);
@@ -143,8 +143,8 @@
         const group = textMesh.userData.group;
         group.rotation.y = time * 0.5;
         group.rotation.x = Math.sin(time * 0.3) * 0.1;
-        group.rotation.z = Math.sin(time * 0.5) * 0.02; // Tiny z-rotation for wobble
-        group.position.y = Math.sin(time * 1.5) * 0.35 + 2; // Tiny increase from 0.3
+        group.rotation.z = Math.sin(time * 0.5) * 0.02;
+        group.position.y = Math.sin(time * 1.5) * 0.35 + 2;
       }
 
       particles.rotation.y = time * 0.1;
