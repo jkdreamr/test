@@ -54,7 +54,7 @@
     document.getElementById('container').appendChild(renderer.domElement);
 
     // **Lighting Adjustments for Better Visibility**
-    scene.add(new THREE.AmbientLight(0xffffff, 1.0)); // Reduced from 1.5 for contrast
+    scene.add(new THREE.AmbientLight(0xffffff, 1.0)); // Reduced for contrast
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(30, 50, 30);
     scene.add(dirLight);
@@ -63,7 +63,7 @@
     pointLight1.position.set(20, 30, 20);
     scene.add(pointLight1);
 
-    const spotLight = new THREE.SpotLight(0xffffff, 1.5); // Increased from 1
+    const spotLight = new THREE.SpotLight(0xffffff, 1.5);
     spotLight.position.set(0, 20, 30);
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
@@ -84,20 +84,21 @@
     let colorIndex = 0;
     let nextColorIndex = 1;
     let transitionStartTime = null;
+    let lastTransitionTime = 0;
 
     const bubbleMaterial = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(colors[colorIndex]),
       roughness: 0.1,
       metalness: 0.2,
-      transmission: 0.6, // Reduced from 0.9 for less transparency
+      transmission: 0.6,
       thickness: 1.5,
       ior: 1.5,
-      reflectivity: 0.7, // Increased from 0.5 for more visibility
+      reflectivity: 0.7,
       clearcoat: 1,
       clearcoatRoughness: 0.1,
       refractionRatio: 0.9,
       transparent: true,
-      opacity: 0.9 // Slightly reduced from 1.0 for density
+      opacity: 0.9
     });
 
     // Create text
@@ -114,7 +115,7 @@
           bevelEnabled: true,
           bevelThickness: 1.5,
           bevelSize: 1.5,
-          bevelSegments: 8
+          bevelSegments: 4 // Reduced from 8 to simplify geometry
         });
         geometry.center();
 
@@ -147,22 +148,24 @@
     scene.add(particles);
 
     // **Smooth Color Transition Function**
-    function updateColor(delta) {
-      if (!transitionStartTime) {
-        transitionStartTime = performance.now();
-      }
+    function updateColor() {
       const currentTime = performance.now();
-      const progress = Math.min((currentTime - transitionStartTime) / 1000, 1); // 1-second transition
+      if (!transitionStartTime) {
+        transitionStartTime = currentTime;
+      }
+      const elapsed = currentTime - transitionStartTime;
+      const transitionDuration = 1000; // 1-second transition
 
-      if (progress >= 1) {
+      if (elapsed >= transitionDuration) {
         colorIndex = nextColorIndex;
         nextColorIndex = (nextColorIndex + 1) % colors.length;
-        transitionStartTime = performance.now();
+        transitionStartTime = currentTime;
       }
 
+      const progress = Math.min(elapsed / transitionDuration, 1);
       const currentColor = new THREE.Color(colors[colorIndex]);
       const nextColor = new THREE.Color(colors[nextColorIndex]);
-      bubbleMaterial.color.lerpColors(currentColor, nextColor, progress);
+      bubbleMaterial.color.copy(currentColor).lerp(nextColor, progress);
     }
 
     // **Animate with Color Transition and Wobble**
@@ -170,6 +173,9 @@
     function animate() {
       requestAnimationFrame(animate);
       time += 0.01;
+
+      // Update color before rendering
+      updateColor();
 
       if (textMesh && isRotating) {
         const group = textMesh.userData.group;
@@ -180,17 +186,17 @@
       }
 
       particles.rotation.y = time * 0.1;
-      updateColor();
       renderer.render(scene, camera);
     }
     animate();
 
-    // **Auto-Change Color Every 2.5 Seconds**
+    // **Auto-Change Color Every 4 Seconds**
     setInterval(() => {
-      if (textMesh) {
+      if (textMesh && performance.now() - lastTransitionTime >= 4000) {
         transitionStartTime = null; // Reset transition
+        lastTransitionTime = performance.now();
       }
-    }, 2500); // 2.5 seconds
+    }, 100); // Check every 100ms to align with frame rate
 
     // Controls
     function toggleRotation() {
