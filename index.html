@@ -63,7 +63,7 @@
     pointLight1.position.set(20, 30, 20);
     scene.add(pointLight1);
 
-    const spotLight = new THREE.SpotLight(0xffffff, 4.5); // Increased for edge highlights and contrast
+    const spotLight = new THREE.SpotLight(0xffffff, 5.0); // Increased for edge highlights and contrast
     spotLight.position.set(0, 20, 30);
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
@@ -72,18 +72,18 @@
     backLight.position.set(0, 2, -20); // Behind the text
     scene.add(backLight);
 
-    // **Bubble Material with Much Darker Pastel Colors**
+    // **Bubble Material with Consistent, Muted Colors**
     const colors = [
-      0x4682B4, // Darker Baby Blue (from 0x87B9D1 - ~70 units)
-      0xC71585, // Darker Baby Pink (from 0xE099B4 - ~100 units)
-      0xFF4500, // Darker Baby Orange (from 0xD9835D - adjusted to a deeper tone)
-      0x5F9EA0, // Darker Light Baby Blue (from 0x8AC7D1 - ~70 units)
-      0xF4A460, // Darker Peach (from 0xFDBD9C - ~70 units)
-      0x9370DB, // Darker Lavender (from 0xCCC9E5 - ~70 units)
-      0x6B8E23, // Darker Pale Green (from 0x7AD87B - ~70 units)
-      0xDAA520, // Darker Khaki (from 0xD4C969 - ~70 units)
-      0xDDA0DD, // Darker Thistle (from 0xBCA2BC - ~70 units, adjusted)
-      0x6495ED  // Darker Light Steel Blue (from 0x94A7C9 - ~70 units)
+      0x6A5ACD, // Slate Blue (muted, consistent dark blue)
+      0xCD5C5C, // Indian Red (muted, consistent dark pink)
+      0xDAA520, // Goldenrod (muted, consistent dark orange)
+      0x708090, // Slate Gray (muted, consistent dark blue-gray)
+      0x8B4513, // Saddle Brown (muted, consistent dark brown)
+      0x8A2BE2, // Blue Violet (muted, consistent dark purple)
+      0x556B2F, // Dark Olive Green (muted, consistent dark green)
+      0xD2691E, // Chocolate (muted, consistent dark orange-brown)
+      0x9932CC, // Dark Orchid (muted, consistent dark purple)
+      0x483D8B  // Dark Slate Blue (muted, consistent dark blue)
     ];
     let colorIndex = 0;
     let nextColorChange = Date.now() + 4000; // 4 seconds from now
@@ -92,9 +92,9 @@
 
     const bubbleMaterial = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(colors[colorIndex]),
-      roughness: 0.1, // Natural glass smoothness
+      roughness: 0.15, // Slightly increased for a frosted glass effect
       metalness: 0.1,
-      transmission: 0.05, // Reduced for better visibility
+      transmission: 0.01, // Minimized for better visibility
       thickness: 1.5,
       ior: 1.5,
       reflectivity: 1.0, // Maximum gloss
@@ -102,7 +102,7 @@
       clearcoatRoughness: 0.05,
       refractionRatio: 0.9,
       transparent: true,
-      opacity: 1.0 // Increased to ensure readability
+      opacity: 1.0 // Maximized for readability
     });
 
     // Create text
