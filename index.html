@@ -53,8 +53,8 @@
     renderer.setClearAlpha(0); // Transparent background
     document.getElementById('container').appendChild(renderer.domElement);
 
-    // **Lighting Adjustments for Better Glass Visibility**
-    scene.add(new THREE.AmbientLight(0xffffff, 1.2)); // Increased for better illumination
+    // **Lighting Adjustments for Premium Glass Visibility**
+    scene.add(new THREE.AmbientLight(0xffffff, 1.2)); // Even illumination
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(30, 50, 30);
     scene.add(dirLight);
@@ -63,27 +63,27 @@
     pointLight1.position.set(20, 30, 20);
     scene.add(pointLight1);
 
-    const spotLight = new THREE.SpotLight(0xffffff, 2.8); // Increased intensity for edges
+    const spotLight = new THREE.SpotLight(0xffffff, 3.0); // Increased for edge highlights
     spotLight.position.set(0, 20, 30);
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
 
-    const backLight = new THREE.PointLight(0xFFFFFF, 1.5, 50); // Enhanced backlight for internal reflections
+    const backLight = new THREE.PointLight(0xFFFFFF, 1.8, 50); // Enhanced for internal reflections
     backLight.position.set(0, 2, -20); // Behind the text
     scene.add(backLight);
 
-    // **Bubble Material with Enhanced Glass Properties and Lighter Colors**
+    // **Bubble Material with Enhanced Glass Properties and Visible Colors**
     const colors = [
-      0x3BCF55, // Lighter Cyan (from 0x0B9E24 + ~30 units)
-      0xCD6BD7, // Lighter Magenta (from 0x9B38A5 + ~30 units)
-      0xD4F856, // Lighter OrangeRed (from 0xA1E525 + ~30 units)
-      0x3E66B5, // Lighter DarkTurquoise (from 0x0B3584 + ~30 units)
-      0xDC8436, // Lighter Gold (from 0xA95305 + ~30 units)
-      0x955398, // Lighter DarkViolet (from 0x622767 + ~30 units)
-      0x5E9276, // Lighter LightSeaGreen (from 0x2B6145 + ~30 units)
-      0xD26888, // Lighter HotPink (from 0xA93757 + ~30 units)
-      0x758073, // Lighter LimeGreen (from 0x424942 + ~30 units)
-      0x7D96C8  // Lighter DodgerBlue (from 0x4A6597 + ~30 units)
+      0x66FF88, // Lighter, vibrant Cyan tint
+      0xD66BEA, // Lighter, vibrant Magenta tint
+      0xFFEA66, // Lighter, vibrant OrangeRed tint
+      0x66BEE6, // Lighter, vibrant DarkTurquoise tint
+      0xFFC266, // Lighter, vibrant Gold tint
+      0xA66BEA, // Lighter, vibrant DarkViolet tint
+      0x66E6CC, // Lighter, vibrant LightSeaGreen tint
+      0xEA66B3, // Lighter, vibrant HotPink tint
+      0x88FF88, // Lighter, vibrant LimeGreen tint
+      0x66A3EA  // Lighter, vibrant DodgerBlue tint
     ];
     let colorIndex = 0;
     let nextColorChange = Date.now() + 4000; // 4 seconds from now
@@ -92,17 +92,17 @@
 
     const bubbleMaterial = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(colors[colorIndex]),
-      roughness: 0.1, // Slightly increased for natural glass
+      roughness: 0.1, // Natural glass smoothness
       metalness: 0.1,
-      transmission: 0.4, // Reduced for better visibility
+      transmission: 0.3, // Reduced for better visibility
       thickness: 1.5,
       ior: 1.5,
-      reflectivity: 0.95,
+      reflectivity: 1.0, // Maximum gloss
       clearcoat: 1,
       clearcoatRoughness: 0.05,
       refractionRatio: 0.9,
       transparent: true,
-      opacity: 0.85 // Increased for better visibility
+      opacity: 0.9 // Increased for clear visibility
     });
 
     // Create text
