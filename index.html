@@ -72,18 +72,18 @@
     backLight.position.set(0, 2, -20); // Behind the text
     scene.add(backLight);
 
-    // **Bubble Material with 25 Units Darker Colors**
+    // **Bubble Material with Pastel Colors**
     const colors = [
-      0x25532B, // 25 units darker Cyan (from 0x507E50)
-      0x722372, // 25 units darker Magenta (from 0x9D4E9D)
-      0xBE7325, // 25 units darker OrangeRed (from 0xE99E50)
-      0x259393, // 25 units darker DarkTurquoise (from 0x50BEBE)
-      0xBE7325, // 25 units darker Gold (from 0xE99E50)
-      0x722372, // 25 units darker DarkViolet (from 0x9D4E9D)
-      0x257358, // 25 units darker LightSeaGreen (from 0x509E83)
-      0xBE2358, // 25 units darker HotPink (from 0xE94E83)
-      0x588825, // 25 units darker LimeGreen (from 0x83B350)
-      0x257893  // 25 units darker DodgerBlue (from 0x50A3BE)
+      0xADD8E6, // Baby Blue
+      0xFFB6C1, // Baby Pink
+      0xFFA07A, // Baby Orange
+      0xB0E0E6, // Light Baby Blue
+      0xFFDAB9, // Peach (soft orange)
+      0xE6E6FA, // Lavender (soft purple)
+      0x98FB98, // Pale Green
+      0xF0E68C, // Khaki (soft yellow)
+      0xD8BFD8, // Thistle (soft purple)
+      0xB0C4DE  // Light Steel Blue
     ];
     let colorIndex = 0;
     let nextColorChange = Date.now() + 4000; // 4 seconds from now
@@ -94,7 +94,7 @@
       color: new THREE.Color(colors[colorIndex]),
       roughness: 0.1, // Natural glass smoothness
       metalness: 0.1,
-      transmission: 0.1, // Reduced for better visibility of dark colors
+      transmission: 0.1, // Reduced for better visibility
       thickness: 1.5,
       ior: 1.5,
       reflectivity: 1.0, // Maximum gloss
