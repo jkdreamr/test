@@ -63,12 +63,12 @@
     pointLight1.position.set(20, 30, 20);
     scene.add(pointLight1);
 
-    const spotLight = new THREE.SpotLight(0xffffff, 2.0); // Increased intensity for edges
+    const spotLight = new THREE.SpotLight(0xffffff, 2.5); // Increased intensity for edges
     spotLight.position.set(0, 20, 30);
     spotLight.target.position.set(0, 2, 0); // Target the text's position
     scene.add(spotLight);
 
-    const backLight = new THREE.PointLight(0xFFFFFF, 1.0, 50); // Backlight for internal reflections
+    const backLight = new THREE.PointLight(0xFFFFFF, 1.2, 50); // Enhanced backlight for internal reflections
     backLight.position.set(0, 2, -20); // Behind the text
     scene.add(backLight);
 
@@ -92,17 +92,17 @@
 
     const bubbleMaterial = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(colors[colorIndex]),
-      roughness: 0.05, // Smoother for glass
+      roughness: 0.02, // Even smoother for glass
       metalness: 0.1, // Slightly reduced for less metallic look
-      transmission: 0.85, // Increased for more transparency
+      transmission: 0.9, // Increased for more transparency
       thickness: 1.5,
       ior: 1.5,
-      reflectivity: 0.9, // Increased for more reflections
-      clearcoat: 1, // Maximum gloss (1 is the limit in r128)
+      reflectivity: 0.95, // Increased for stronger reflections
+      clearcoat: 1, // Maximum gloss
       clearcoatRoughness: 0.05, // Smoother clearcoat
       refractionRatio: 0.9,
       transparent: true,
-      opacity: 0.7 // Reduced for more translucency
+      opacity: 0.65 // Reduced for more translucency
     });
 
     // Create text
@@ -115,7 +115,7 @@
           font: font,
           size: 8,
           height: 3,
-          curveSegments: 20,
+          curveSegments: 30, // Increased for smoother edges
           bevelEnabled: true,
           bevelThickness: 1.5,
           bevelSize: 1.5,
