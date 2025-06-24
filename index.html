@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>kelix Bubble Gradient</title>
+  <title>kelix Bubble Jelly</title>
   <style>
     body {
       margin: 0;
       overflow: hidden;
-      background: linear-gradient(135deg, #fddde6, #e3c9e7, #c2e9fb);
+      background: linear-gradient(135deg, #FFB3B3, #FFB3D9, #B3D9B3);
       background-size: 400% 400%;
       animation: gradientBG 15s ease infinite;
     }
@@ -33,15 +33,15 @@
 </head>
 <body>
   <div id="controls">
-    <strong>kelix 3D Bubble</strong><br/>
+    <strong>kelix Jelly Bubble</strong><br/>
     <button onclick="toggleRotation()">Toggle Rotation</button>
     <button onclick="changeColor()">Change Color</button>
   </div>
   <div id="container"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+  <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
+  <script src="https://threejs.org/examples/js/geometries/TextGeometry.js"></script>
 
   <script>
     let scene = new THREE.Scene();
@@ -53,40 +53,34 @@
     renderer.setClearAlpha(0);
     document.getElementById('container').appendChild(renderer.domElement);
 
+    // Lights
     scene.add(new THREE.AmbientLight(0xffffff, 1.5));
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
     dirLight.position.set(30, 50, 30);
     scene.add(dirLight);
-
-    const pointLight1 = new THREE.PointLight(0xffe6f7, 1.2, 100);
-    pointLight1.position.set(20, 30, 20);
-    scene.add(pointLight1);
-
-    const backLight = new THREE.PointLight(0xffffff, 1.5, 100);
-    backLight.position.set(0, 10, -30);
+    const backLight = new THREE.PointLight(0xffffff, 1.5);
+    backLight.position.set(0, -20, -20);
     scene.add(backLight);
 
-    const colors = [0xbfd7ff, 0xdcbfff, 0xb3fff7, 0xfff3b3, 0xfbb3d9];
+    // Materials
+    const colors = [0xadd8e6, 0xffb6c1, 0xd8bfd8, 0xb0e0e6];
     let colorIndex = 0;
-    let nextColorChange = Date.now() + 4000;
-    let transitionProgress = 0;
-
-    const bubbleMaterial = new THREE.MeshPhysicalMaterial({
+    const material = new THREE.MeshPhysicalMaterial({
       color: new THREE.Color(colors[colorIndex]),
-      roughness: 0.1,
-      metalness: 0.0,
+      roughness: 0.05,
+      metalness: 0,
       transmission: 0.95,
-      thickness: 1.5,
-      ior: 1.25,
-      reflectivity: 1.0,
-      clearcoat: 1,
-      clearcoatRoughness: 0.1,
-      refractionRatio: 0.98,
+      thickness: 2.0,
       transparent: true,
-      opacity: 1.0
+      clearcoat: 1,
+      clearcoatRoughness: 0.05,
+      reflectivity: 1,
+      opacity: 1.0,
+      ior: 1.4
     });
 
-    let textMesh, group, isRotating = true;
+    // Text
+    let textMesh, baseGeometry, isRotating = true;
 
     new THREE.FontLoader().load(
       'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
@@ -103,71 +97,60 @@
         });
         geometry.center();
 
-        textMesh = new THREE.Mesh(geometry, bubbleMaterial);
-
-        group = new THREE.Group();
-        group.add(textMesh);
-        group.position.y = 2;
-        scene.add(group);
+        baseGeometry = geometry.clone(); // Save original for morphing
+        textMesh = new THREE.Mesh(geometry, material);
+        scene.add(textMesh);
       }
     );
 
-    const particleGeometry = new THREE.BufferGeometry();
-    const particleCount = 250;
+    // Particles
+    const particleCount = 300;
+    const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount * 3; i++) {
+    for (let i = 0; i < positions.length; i++) {
       positions[i] = (Math.random() - 0.5) * 100;
     }
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const particleMaterial = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 0.5,
-      opacity: 0.1,
-      transparent: true
-    });
-    const particles = new THREE.Points(particleGeometry, particleMaterial);
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const particleMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.4, opacity: 0.1, transparent: true });
+    const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
+    // Animate
     let time = 0;
     function animate() {
       requestAnimationFrame(animate);
       time += 0.01;
 
-      const now = Date.now();
-      if (now >= nextColorChange) {
-        colorIndex = (colorIndex + 1) % colors.length;
-        nextColorChange = now + 4000;
-        transitionProgress = 0;
+      if (textMesh && baseGeometry) {
+        const pos = textMesh.geometry.attributes.position;
+        const basePos = baseGeometry.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          const x = basePos.getX(i);
+          const y = basePos.getY(i);
+          const z = basePos.getZ(i);
+          pos.setXYZ(
+            i,
+            x + 0.2 * Math.sin(time * 2 + y * 0.2),
+            y + 0.2 * Math.cos(time * 2 + x * 0.2),
+            z + 0.2 * Math.sin(time * 2 + x * 0.2)
+          );
+        }
+        pos.needsUpdate = true;
+        textMesh.geometry.computeVertexNormals();
+        if (isRotating) {
+          textMesh.rotation.y = time * 0.5;
+        }
       }
 
-      if (transitionProgress < 1) {
-        transitionProgress += 0.01;
-        const currentColor = new THREE.Color(colors[(colorIndex - 1 + colors.length) % colors.length]);
-        const nextColor = new THREE.Color(colors[colorIndex]);
-        bubbleMaterial.color.lerpColors(currentColor, nextColor, transitionProgress);
-      }
-
-      if (group && isRotating) {
-        group.rotation.y = time * 0.5;
-        group.rotation.x = Math.sin(time * 0.3) * 0.1;
-        group.rotation.z = Math.sin(time * 0.5) * 0.02;
-        group.position.y = Math.sin(time * 1.5) * 0.35 + 2;
-      }
-
-      particles.rotation.y = time * 0.05;
+      particles.rotation.y = time * 0.1;
       renderer.render(scene, camera);
     }
     animate();
 
-    function toggleRotation() {
-      isRotating = !isRotating;
-    }
+    function toggleRotation() { isRotating = !isRotating; }
     function changeColor() {
-      if (textMesh) {
-        colorIndex = (colorIndex + 1) % colors.length;
-        nextColorChange = Date.now();
-        transitionProgress = 0;
-      }
+      colorIndex = (colorIndex + 1) % colors.length;
+      material.color.setHex(colors[colorIndex]);
     }
 
     window.addEventListener('resize', () => {
