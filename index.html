@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>kelix Wavy Bubble</title>
+  <title>kelix Bubble Gradient</title>
   <style>
     body {
       margin: 0;
       overflow: hidden;
-      background: linear-gradient(135deg, #FFB3B3, #FFB3D9, #B3D9B3);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
+      background: linear-gradient(135deg, #FFDEE9, #B5FFFC, #C9FFBF, #FFFCB9);
+      background-size: 600% 600%;
+      animation: gradientBG 20s ease infinite;
     }
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
+      25% { background-position: 50% 50%; }
       50% { background-position: 100% 50%; }
+      75% { background-position: 50% 50%; }
       100% { background-position: 0% 50%; }
     }
     #controls {
@@ -32,131 +34,117 @@
   </style>
 </head>
 <body>
-  <div id="controls">
-    <strong>kelix 3D Bubble</strong><br/>
-    <button onclick="toggleRotation()">Toggle Rotation</button>
-    <button onclick="changeColor()">Change Color</button>
-  </div>
-  <div id="container"></div>
+<div id="controls">
+  <strong>kelix 3D Bubble</strong><br/>
+  <button onclick="toggleRotation()">Toggle Rotation</button>
+</div>
+<div id="container"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/loaders/FontLoader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/examples/js/geometries/TextGeometry.js"></script>
 
-  <script>
-    let scene = new THREE.Scene();
-    let camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 1000);
-    camera.position.set(0, 0, 60);
+<script>
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 1, 1000);
+camera.position.set(0, 0, 60);
 
-    let renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(innerWidth, innerHeight);
-    document.getElementById('container').appendChild(renderer.domElement);
+let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setClearAlpha(0);
+document.getElementById('container').appendChild(renderer.domElement);
 
-    // Lighting
-    scene.add(new THREE.AmbientLight(0xffffff, 1.2));
-    const light1 = new THREE.DirectionalLight(0xffffff, 0.8);
-    light1.position.set(30, 30, 30);
-    scene.add(light1);
+scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+let dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(30, 50, 30);
+scene.add(dirLight);
 
-    // Color palette
-    const colors = [
-      0x6A5ACD, 0xCD5C5C, 0xDAA520,
-      0x708090, 0x8B4513, 0x8A2BE2,
-      0x556B2F, 0xD2691E, 0x9932CC, 0x483D8B
-    ];
-    let colorIndex = 0;
+const colors = [0xA3C1AD, 0xFFD1DC, 0xD1E8E2, 0xFFF5BA];
+let colorIndex = 0;
+let nextColorChange = Date.now() + 4000;
+let transitionProgress = 0;
+const transitionDuration = 1000;
 
-    const bubbleMaterial = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color(colors[colorIndex]),
-      roughness: 0.1,
-      metalness: 0.2,
-      transmission: 0.2,
-      thickness: 1.5,
-      ior: 1.4,
-      reflectivity: 0.5,
-      clearcoat: 1,
-      clearcoatRoughness: 0.05,
-      transparent: true,
-      opacity: 1.0 // fully visible
+const bubbleMaterial = new THREE.MeshPhysicalMaterial({
+  color: new THREE.Color(colors[colorIndex]),
+  roughness: 0.15,
+  metalness: 0.1,
+  transmission: 0.01,
+  thickness: 1.5,
+  ior: 1.5,
+  reflectivity: 1.0,
+  clearcoat: 1,
+  clearcoatRoughness: 0.05,
+  refractionRatio: 0.9,
+  transparent: true,
+  opacity: 1.0
+});
+
+let textMesh, group, isRotating = true;
+
+new THREE.FontLoader().load(
+  'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
+  font => {
+    const geometry = new THREE.TextGeometry('kelix', {
+      font: font,
+      size: 8,
+      height: 3,
+      curveSegments: 30,
+      bevelEnabled: true,
+      bevelThickness: 1.5,
+      bevelSize: 1.5,
+      bevelSegments: 4
     });
+    geometry.center();
 
-    let textMesh, isRotating = true, basePositions = [];
+    textMesh = new THREE.Mesh(geometry, bubbleMaterial);
+    group = new THREE.Group();
+    group.add(textMesh);
+    group.position.y = 2;
+    scene.add(group);
+  }
+);
 
-    new THREE.FontLoader().load(
-      'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
-      font => {
-        const geometry = new THREE.TextGeometry('kelix', {
-          font: font,
-          size: 8,
-          height: 3,
-          curveSegments: 30,
-          bevelEnabled: true,
-          bevelThickness: 1,
-          bevelSize: 1,
-          bevelSegments: 4
-        });
-        geometry.center();
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.01;
 
-        geometry.computeVertexNormals();
-        const positionAttr = geometry.attributes.position;
-        for (let i = 0; i < positionAttr.count; i++) {
-          basePositions.push(positionAttr.getX(i), positionAttr.getY(i), positionAttr.getZ(i));
-        }
+  const now = Date.now();
+  if (now >= nextColorChange) {
+    colorIndex = (colorIndex + 1) % colors.length;
+    nextColorChange = now + 4000;
+    transitionProgress = 0;
+  }
 
-        textMesh = new THREE.Mesh(geometry, bubbleMaterial);
-        scene.add(textMesh);
-      }
-    );
+  if (transitionProgress < 1) {
+    transitionProgress += 0.01;
+    if (transitionProgress > 1) transitionProgress = 1;
+    const currentColor = new THREE.Color(colors[(colorIndex - 1 + colors.length) % colors.length]);
+    const nextColor = new THREE.Color(colors[colorIndex]);
+    bubbleMaterial.color.lerpColors(currentColor, nextColor, transitionProgress);
+  }
 
-    // Wavy Jelly Animation
-    let time = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      time += 0.01;
+  if (textMesh && isRotating) {
+    group.rotation.y = time * 0.5;
+    group.rotation.x = Math.sin(time * 0.3) * 0.1;
+    group.rotation.z = Math.sin(time * 0.5) * 0.02;
+    group.position.y = Math.sin(time * 1.5) * 0.35 + 2;
+  }
 
-      if (textMesh) {
-        const positionAttr = textMesh.geometry.attributes.position;
-        for (let i = 0; i < positionAttr.count; i++) {
-          const ox = basePositions[i * 3];
-          const oy = basePositions[i * 3 + 1];
-          const oz = basePositions[i * 3 + 2];
-          const offset = Math.sin(time * 3 + ox * 0.5 + oy * 0.3) * 0.3;
+  renderer.render(scene, camera);
+}
+animate();
 
-          positionAttr.setXYZ(
-            i,
-            ox + 0.2 * Math.sin(time * 2 + oy * 0.2),
-            oy + 0.2 * Math.cos(time * 2 + oz * 0.2),
-            oz + offset
-          );
-        }
-        positionAttr.needsUpdate = true;
-        textMesh.geometry.computeVertexNormals();
+function toggleRotation() {
+  isRotating = !isRotating;
+}
 
-        if (isRotating) {
-          textMesh.rotation.y += 0.005;
-          textMesh.rotation.x = Math.sin(time * 0.3) * 0.05;
-        }
-      }
-
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    function toggleRotation() {
-      isRotating = !isRotating;
-    }
-    function changeColor() {
-      if (textMesh) {
-        colorIndex = (colorIndex + 1) % colors.length;
-        bubbleMaterial.color.setHex(colors[colorIndex]);
-      }
-    }
-
-    window.addEventListener('resize', () => {
-      camera.aspect = innerWidth / innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(innerWidth, innerHeight);
-    });
-  </script>
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
 </body>
 </html>
