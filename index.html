@@ -116,15 +116,6 @@
       }
     );
 
-    const particles = new THREE.Points(
-      new THREE.BufferGeometry().setAttribute(
-        'position',
-        new THREE.Float32BufferAttribute(new Array(300).fill(0).map(()=> (Math.random()-0.5)*100),3)
-      ),
-      new THREE.PointsMaterial({ color:0xffffff, size:0.4, opacity:0.08, transparent:true })
-    );
-    scene.add(particles);
-
     let time = 0;
     function animate() {
       requestAnimationFrame(animate);
